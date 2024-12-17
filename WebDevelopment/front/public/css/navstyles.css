@@ -1,0 +1,107 @@
+nav {
+    font-family: Josefin Sans;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: linear-gradient(90deg, #E8483A 30%, #B8453C 70%, #88423D 100%);
+    width: 100%;
+    height: 100px;
+    margin: 0px;
+}
+
+.icon {
+    width: 34px;
+    height: 34px;
+    position: relative;
+    padding-left: 5px;
+}
+
+#login .icon{
+    padding-left: 0px;
+}
+
+#logo {
+    width: 60px;
+    height: 56px;
+    top: 0px;
+}
+
+.nav-text {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+}
+
+.navbar a {
+    display: flex;
+    float: left;
+    text-align: center;
+    padding: 5px;
+    margin: 20px;
+    color: white;
+    text-decoration: none;
+    font-size: 25px;
+    align-items: center;
+    justify-items: center;
+    border-radius: 30px;
+}
+
+.navbar a.logo{
+    margin: 10px;
+}
+
+.navbar a:hover {
+    background-color: #88423D;
+}
+
+.navbar a.logo:hover{
+    background-color: transparent;
+}
+
+.active-page{
+    background-color: #B8453C;
+}
+
+#login {
+    right: 0;
+    border: 2px solid white;
+    border-radius: 30px;
+}
+
+.navbar a.split {
+    float: right;
+}
+
+@media (max-width: 800px) {
+    .nav-text {
+        display: none;
+    }
+}
+
+
+/* nav edit page */
+
+.rotate {
+    background-color: transparent;
+    border: 0px;
+    cursor: pointer;
+}
+
+.rotate :hover {
+    background-color: #88423D;
+    border-radius: 30px;
+    padding-right: 0.5px;
+    padding-left: 0.5px;
+}
+
+.torotate {
+    overflow: hidden;
+}
+
+.torotate img{
+    transition: all 0.3s;
+}
+
+.torotate:hover img{
+    transform: scale(1) rotate(-180deg);
+}

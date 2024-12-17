@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/navstyles.css">
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Josefin Sans'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product</title>
+    <style>
+        .flexrow {
+            display: flex;
+            /* flex-direction: column; */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .showcontent {
+            width: 70%;
+            font-size: 22px;
+            color: #4C0B0A;
+            text-transform: uppercase;
+            padding: 40px;
+            margin: 50px;
+            background: white;
+            border-radius: 20px;
+        }
+
+        .imageproduct {
+            border-radius: 20px;
+            width: 75%;
+            height: 75%; 
+        }
+
+        @media (min-width: 900px) {
+            .flexrow {
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+            }
+
+            .showcontent {
+                width: 35%;
+            }
+
+            .imageproduct {
+                border-radius: 20px;
+                width: 90%;
+                height: 90%;
+                margin-left: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div>
+            <a href="/" class="logo">
+                <img class="icon" id="logo" src="/images/logo.svg">
+            </a>
+            <a href="/Search">
+                <img class="icon" src="/images/Search_Navbar.svg">
+                <span class="nav-text">Search</span>
+            </a>
+            <a href="/Team">
+                <img class="icon" src="/images/team_icon.svg">
+                <span class="nav-text">Team</span>
+            </a>
+        </div>
+        <div class="split" id="dynamicnav">
+            <a href="/Login" id="login">
+                <span class="nav-text">Login</span>
+                <img class="icon" src="/images/login_icon.svg">
+            </a>
+        </div>
+    </nav>
+    <main>
+        <a href="/Search">
+            <div><img class="back" src="/images/backlogo.svg"></div>
+        </a>
+        <section class="flexrow">
+            <div align="center" id="imageproduct">
+
+            </div>
+            <div class="showcontent">
+                <div class="flexrow">
+                    <div id="showstatus">
+                        Status:
+                    </div>
+                    <div id="showprice">
+                        ฿
+                    </div>
+                </div>
+                <div class="productname" id="showproductname">
+
+                </div>
+                <div class="linecolor">
+
+                </div>
+                description<br>
+                <div style="font-size: 18px;">
+                    <div class="descrip" id="showdescription"></div>
+                    <div class="spacebetweenline" id="showcategory">
+                        Category :
+                    </div>
+                    <div class="spacebetweenline" id="showproductid">
+                        Product Id :
+                    </div>
+                </div>
+                <div class="spacebetweenline">
+                    Tags
+                </div>
+                <div class="spacebetweenline" id="showtag">
+                    Tag Tag
+                </div>
+                <div id="nutrients">
+                    
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="footercontent">
+            <p class="alphabold">Contact Us</p>
+            <p class="footeralpha">S&P Syndicate Public Company Limited<br>
+                2034/100-103, Italthai Tower, 23th Floor.,<br>
+                New Petchburi Rd., Bangkapi,<br>
+                Huaykwang, Bangkok 10310<br>
+                Tel: (02) 785-4000<br>
+                Fax: (02) 785-4040</p>
+        </div>
+        <div align="right">
+            <a href="/" class="logo">
+                <img class="logoatfooter" id="logo" src="/images/logo.svg">
+            </a><br>
+            <a href="https://www.facebook.com/snpfood/?locale=th_TH">
+                <img class="aicon" src="/images/Facebook.svg">
+            </a>
+            <a href="https://www.instagram.com/snp_simplydelicious/">
+                <img class="aicon" src="/images/Instagram.svg">
+            </a>
+            <a href="https://tr.ee/VIibInbr1Z">
+                <img class="aicon" src="/images/LINE.svg">
+            </a>
+            <a href="https://youtube.com/@spthailand4084?si=PRoBA6Siuxi6zLVO">
+                <img class="aicon" id="YouTube" src="/images/YouTube.svg">
+            </a>
+        </div>
+    </footer>
+    <script type="text/javascript"></script>
+    <script>
+        var url = new URL(window.location);
+        async function toShowAll() {
+            var pid = url.searchParams.get("pid");
+            let response = await fetch(`http://localhost:3031/api/product/${pid}`, { method: 'GET' });
+            let data = await response.json();
+            let sdata = data.data[0];
+            if (sdata.Status != 0) {
+                document.getElementById("showstatus").innerHTML += "<span class='true'>Available</span>"
+            } else {
+                document.getElementById("showstatus").innerHTML += "<span class='false'>Unavailable</span>"
+            }
+            console.log(sdata.Picture)
+            document.getElementById("imageproduct").innerHTML = `<img class="imageproduct" src="${sdata.Picture}">`
+            document.getElementById("showdescription").innerHTML = sdata.Description
+            document.getElementById("showcategory").innerHTML += sdata.CategoryCode
+            document.getElementById("showproductid").innerHTML += sdata.ProductID
+            document.getElementById("showtag").innerHTML = sdata.Tag
+            document.getElementById("showprice").innerHTML += sdata.Price + ".00"
+
+            // Testing public API - Spoonacular API
+            // method: GET
+            // CASE 1
+            // URL: https://api.spoonacular.com/food/products/10363958?apiKey=
+            // CASE 2
+            // URL: https://api.spoonacular.com/food/products/11532746?apiKey=
+            let rooturl =
+                "https://api.spoonacular.com/food/products/" + pid + "?apiKey="; //Request URL
+            fetch(rooturl)
+                .then((res) => res.json()) // Get JSON from the response
+                .then((data) => {
+                    console.log(data);
+                    let nutrients = data.nutrition;
+                    let textout = "<ul>" +
+                        "<li>Calories: " + nutrients.calories +
+                        "<li>Carbohydrate: " + nutrients.carbs +
+                        "<li>Fat: " + nutrients.fat +
+                        "<li>Protein: " + nutrients.protein;
+                    document.querySelector("#nutrients").innerHTML = textout;
+                })
+                .catch((err) => console.log(err));
+
+        }
+        toShowAll()
+    </script>
+</body>
+
+</html>

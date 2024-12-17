@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/navstyles.css">
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Josefin Sans'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Management</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <style>
+        .flexrow {
+            display: flex;
+            justify-content: center;
+        }
+
+        @media (min-width: 900px) {
+            .flexrow {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div>
+            <a href="/" class="logo">
+                <img class="icon" id="logo" src="images/logo.svg">
+            </a>
+            <a href="/Search">
+                <img class="icon" src="images/Search_Navbar.svg">
+                <span class="nav-text">Search</span>
+            </a>
+            <a href="/Team">
+                <img class="icon" src="images/team_icon.svg">
+                <span class="nav-text">Team</span>
+            </a>
+        </div>
+        <div class="split">
+            <div class="dropdown">
+                    <button class="rotate">
+                        <div class="torotate">
+                            <img class="icon" src="images/DropdownArrow.svg">
+                        </div>
+                    </button>
+                    <div class="dropdown-options">
+                        <a href="/ProductManagement">Product Management</a>
+                        <a href="/UserManagement">User Management</a>
+                        <a href="/logout">Logout</a>
+                    </div>
+            </div>
+        </div>
+
+    </nav>
+    <main>
+        <h1 class="headtext">Product Management</h1>
+        <div class="searchproduct">
+            <input type="search" class="searchproduct" id="getSearch" placeholder="search product by ID">
+            <button class="imgsearchbox" onclick="toSearch()">
+                <img class="imgsearchbox" src="images/Search_PM.svg">
+            </button>
+        </div>
+        <div class="flexrow" id="thispoint">
+            <div class="Pblock" id="productaddblock">
+                <a href="/ProductEditAdd">
+                    <button class="addproduct">
+                        <img class="plusicon" src="images/plus_icon.svg">
+                    </button>
+                </a>
+                <p><a href="/ProductEditAdd" class="addproduct">Add Product</a></p>
+            </div>
+        </div>
+    </main>
+    <script>
+        fetch("http://localhost:3031/api/products")
+        .then((data)=>{
+            if (data.ok) {
+                return data.json()
+            }
+        })
+        .then((dat) => {
+            Array.from(dat.data).map((s, i) => {
+                let bigshow = document.createElement("div");
+                let picshow = document.createElement("div");
+                let idshow = document.createElement("div");
+                let iconset = document.createElement("div");
+                bigshow.classList.add("Pblock");
+                picshow.setAttribute("id", "imageproduct");
+                idshow.setAttribute("id", `idproduct${i+1}`);
+                picshow.innerHTML = `<img class="ProductImage" src="${s.Picture}">`;
+                idshow.innerHTML = `${s.ProductID}`
+                iconset.innerHTML = `<button class="bin" onclick="toDelete(${i+1})">
+                                        <img src="images/Trash Can.svg">
+                                    </button>
+                                    <button class="pencil" onclick="toEdit(${i+1})">
+                                        <img src="images/Pencil_icon.svg">
+                                    </button>`;
+                bigshow.appendChild(picshow);
+                bigshow.appendChild(idshow);
+                bigshow.appendChild(iconset);
+                document.getElementById("thispoint").appendChild(bigshow);
+            })
+        });
+
+        async function toSearch() {
+            let search_target = document.getElementById("getSearch").value
+            document.getElementById("thispoint").innerHTML = "";
+            if (!search_target) {
+                alert("Please type ProductID to search");
+                fetch("http://localhost:3031/api/products")
+                .then((data)=>{
+                    if (data.ok) {
+                        return data.json()
+                    }
+                })
+                .then((dat) => {
+                    let addshow = document.createElement("div");
+                    addshow.classList.add("Pblock");
+                    addshow.setAttribute("id", "productaddblock");
+                    addshow.innerHTML = `<a href="/ProductEditAdd">
+                                            <button class="addproduct">
+                                                <img class="plusicon" src="images/plus_icon.svg">
+                                            </button>
+                                        </a>
+                                        <p><a href="/ProductEditAdd" class="addproduct">Add Product</a></p>`
+                    document.getElementById("thispoint").appendChild(addshow);
+                    Array.from(dat.data).map((s, i) => {
+                        let bigshow = document.createElement("div");
+                        let picshow = document.createElement("div");
+                        let idshow = document.createElement("div");
+                        let iconset = document.createElement("div");
+                        bigshow.classList.add("Pblock");
+                        picshow.setAttribute("id", "imageproduct");
+                        idshow.setAttribute("id", `idproduct${i+1}`);
+                        picshow.innerHTML = `<img class="ProductImage" src="${s.Picture}">`;
+                        idshow.innerHTML = `${s.ProductID}`
+                        iconset.innerHTML = `<button class="bin" onclick="toDelete(${i+1})">
+                                                <img src="images/Trash Can.svg">
+                                            </button>
+                                            <button class="pencil" onclick="toEdit(${i+1})">
+                                                <img src="images/Pencil_icon.svg">
+                                            </button>`;
+                        bigshow.appendChild(picshow);
+                        bigshow.appendChild(idshow);
+                        bigshow.appendChild(iconset);
+                        document.getElementById("thispoint").appendChild(bigshow);
+                    })
+                });
+            }
+            else {
+                let response = await fetch(`http://localhost:3031/api/product/${search_target}`, { method: 'GET' });
+                let data = await response.json();
+                
+                if (data.data.length != 0) {
+                    let sdata = data.data[0];
+                    let bigshow = document.createElement("div");
+                        let picshow = document.createElement("div");
+                        let idshow = document.createElement("div");
+                        let iconset = document.createElement("div");
+                        bigshow.classList.add("Pblock");
+                        picshow.setAttribute("id", "imageproduct");
+                        idshow.setAttribute("id", `idproduct1`);
+                        picshow.innerHTML = `<img class="ProductImage" src="${sdata.Picture}">`;
+                        idshow.innerHTML = `${sdata.ProductID}`
+                        iconset.innerHTML = `<button class="bin" onclick="toDelete(1)">
+                                                <img src="images/Trash Can.svg">
+                                            </button>
+                                            <button class="pencil" onclick="toEdit(1)">
+                                                <img src="images/Pencil_icon.svg">
+                                            </button>`;
+                        bigshow.appendChild(picshow);
+                        bigshow.appendChild(idshow);
+                        bigshow.appendChild(iconset);
+                        document.getElementById("thispoint").appendChild(bigshow);
+                } else {
+                    document.getElementById("thispoint").innerHTML = "<div class='NotFound'>Data Not Found</div>"
+                } 
+            }
+        } 
+
+        async function toDelete(id) {
+            let delete_target = document.getElementById(`idproduct${id}`).innerText;
+            await fetch("http://localhost:3031/api/product",
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: "DELETE",
+                body: JSON.stringify({
+                    "Product": {
+                        "ProductID": delete_target,
+                    }
+                })
+            })
+            .then(
+                function(res){ console.log(`${delete_target} Delete Success`) }
+            )
+            .catch(function(res){ console.log(res) })
+            alert('Delete ' + delete_target + ' successfully');
+            window.location.reload()
+        }
+
+        function toEdit(id) {
+            let pid = document.getElementById(`idproduct${id}`).innerText;
+            window.location.href = `/ProductEditAdd?pid=${pid}`;
+        }
+        
+    </script>
+</body>
+
+</html>

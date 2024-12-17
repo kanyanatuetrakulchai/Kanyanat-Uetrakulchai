@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/navstyles.css">
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Josefin Sans'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Edit</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <style>
+        .flexrow {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .specifyflex {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input[name="name"] {
+            width: 75%;
+        }
+
+        .catandsta,
+        #catandsta {
+            font-size: 35px;
+            font-weight: 500;
+            padding: 20px;
+        }
+
+        .catandsta {
+            margin-left: 10%;
+        }
+
+        #position_price {
+            position: relative;
+            margin-right: 5%;
+        }
+
+        .setdes {
+            text-align: center;
+        }
+
+        #specialfortag {
+            display: flex;
+            flex-direction: row;
+        }
+        
+        @media (min-width: 1000px) {
+            .flexrow {
+                display: flex;
+                flex-direction: row;
+                justify-content: start;
+            }
+            
+            #imageproductedit {
+                margin-left: 60px;
+            }
+
+            .specifyflex {
+                justify-content: start;
+                flex-direction: row;
+            }
+            
+            input[name="name"] {
+                width: 90%;
+            }
+
+            #uploadbutton {
+                margin-left: 220px;
+            }
+
+            .imgup {
+                margin-left: 120px;
+            }
+
+            #position_price {
+                display: inline-flex;
+                position: absolute;
+                right: 7%;
+            }
+
+            .catandsta,
+            #catandsta {
+                margin-left: 120px;
+            }
+
+            input[name="pid"] {
+                width: 30%;
+            }
+
+            .setdes {
+                text-align: left;
+            }
+
+            #ptag {
+                margin-left: 68px;
+            }
+
+            .tagblock {
+                margin-left: 20px;
+            }
+
+            input[name="tag"] {
+                width: 72.5%;
+            }
+
+            #diffbutton {
+                margin-top: 25%;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div>
+            <a href="/" class="logo">
+                <img class="icon" id="logo" src="images/logo.svg">
+            </a>
+            <a href="/Search">
+                <img class="icon" src="images/Search_Navbar.svg">
+                <span class="nav-text">Search</span>
+            </a>
+            <a href="/Team">
+                <img class="icon" src="images/team_icon.svg">
+                <span class="nav-text">Team</span>
+            </a>
+        </div>
+        <div class="split">
+            <div class="dropdown">
+                    <button class="rotate">
+                        <div class="torotate">
+                            <img class="icon" src="images/DropdownArrow.svg">
+                        </div>
+                    </button>
+                    <div class="dropdown-options">
+                        <a href="/ProductManagement">Product Management</a>
+                        <a href="/UserManagement">User Management</a>
+                        <a href="/logout">Logout</a>
+                    </div>
+            </div>
+        </div>
+
+    </nav>
+    <main>
+        <section class="flexrow" id="top">
+            <a href="/ProductManagement">
+                <div>
+                    <img class="back" src="images/backlogo.svg">
+                </div>
+            </a>
+            <button id="hiddenifadd" onclick="toDelete()">
+                <img src="images/delete_button.svg">
+            </button>
+        </section>
+        <section class="flexrow">
+            <section class="flexcolumn">
+                <div id="imageproduct" onclick="toInput()"> 
+                    <button>
+                        <img class="imgup" src="images/Upload_image button.svg">
+                    </button>
+                </div>
+                <div class="flexrow" id="uploadbutton">
+                    <div class="image-upload" onclick="toInput()">
+                        <label>
+                            <img src="images/Pencil_icon.svg"/>
+                        </label>
+                    </div>
+                    <div>
+                        <button class="delete" onclick="toDeleteImage()">
+                            <img src="images/Delete_icon.svg"/>
+                        </button>
+                    </div>
+                </div>
+                <div class="catandsta"> <!-- Dropdown Category List -->
+                    Category : 
+                    <select name="cars" id="showcategory" required>
+                        <option value="" disabled selected hidden>Select Category</option>
+                        <option value="C">Cake</option>
+                        <option value="B">Bread</option>
+                        <option value="P">Pastry</option>
+                        <option value="S">Snacks</option>
+                    </select>
+                </div>
+                <div class="flexrow" id="catandsta">
+                    Status :
+                    <div id="statuscheck" onclick="toUnAvailable()">
+                        
+                    </div>
+                </div>
+            </section>
+            <form class="showcontent2">
+                <input class="hide" id="img" name="img">
+                <input class="hide" name="category">
+                <input class="hide" name="status">
+                <div align="center" class="specifyflex">
+                    <div>
+                        <input id="pname" name="name" type="text" placeholder="Name" required>
+                    </div>
+                    <div class="flexrow" id="position_price">
+                        <label for="price"> ฿ </label>
+                        <input type="number" id="pprice" name="price" placeholder="99" title="กรุณากรอกเพียงตัวเลข 0-9 เท่านั้น" required>
+                    </div>
+                </div>
+                <div>
+                    <div class="flexrow" id="editifadd">
+                        <label class="setdes"> Product ID: </label> 
+                        <input type="number" id="pid" name="pid" pattern="[0-9]{0,10}" placeholder="00001" title="กรุณากรอกเพียงตัวเลข 0-9 เท่านั้น" required>
+                    </div>
+                    <div class="setdes">
+                        Description
+                        <div>
+                            <textarea id="pdesc" placeholder="Type Description Here" required></textarea>
+                        </div>
+                    </div>
+                    <div class="flexrow" id="specialfortag">
+                        <div id="setTag">
+                            Tag
+                        </div> 
+                        <input type="text" id="tag" name="tag">
+                        <button type="button" onclick="toAddTag()">
+                            <img src="images/whiteplus.svg">
+                        </button>
+                    </div>
+                </div>
+                <div class="flexrow" id="ptag">
+                    
+                </div>
+                <div id="diffbutton">
+                    
+                </div>
+            </form>
+        </section>
+    </main>
+    <script>
+        var url = new URL(window.location);
+        async function toShowAll()  {
+            if (url.searchParams.get("pid")) {
+                var pid = url.searchParams.get("pid");
+                let response = await fetch(`http://localhost:3031/api/product/${pid}`, { method: 'GET' });
+                let data = await response.json();
+                let sdata = data.data[0];
+                document.getElementById("pname").value = sdata.PName;
+                document.getElementById("imageproduct").innerHTML = `<img id="imageproductedit" src="${sdata.Picture}">`
+                document.getElementById("img").value = sdata.Picture;
+
+                document.getElementById("editifadd").innerHTML = "";
+                let idblock = document.createElement("div");
+                idblock.classList.add("setdes")
+                idblock.innerHTML =  `Product ID: ${pid}`;
+                document.getElementById("editifadd").append(idblock);
+
+                document.getElementById("pdesc").value = sdata.Description
+                document.getElementById("pprice").value = sdata.Price + ".00"
+                let check = document.getElementById("statuscheck");
+                // let sta = document.createElement("span");
+                if (sdata.Status === 1) {
+                    check.innerHTML = "<span class='availablestatus'>Available</span>";
+                } else {
+                    check.innerHTML = "<span class='unavailablestatus'>Unavailable</span>";
+                }
+                /* Create Tag Item */
+                if (sdata.Tag) {
+                    let tag = document.getElementById("ptag");
+                    let tagblock = document.createElement("div");
+                    tagblock.classList.add("tagblock");
+                    let taglist = Array.from(sdata.Tag.split(",").map(x => x.trim()));
+                    for (let i = 0; i < taglist.length; i++) {
+                        let tag = document.getElementById("ptag");
+                        let tagblock = document.createElement("div");
+                        tagblock.classList.add("tagblock");
+                        tagblock.setAttribute("onclick", "manageTag(this)");
+                        tagblock.innerHTML = taglist[i];
+                        tag.append(tagblock);
+                    }
+                }
+                document.getElementById("showcategory").value = sdata.CategoryCode;
+                document.getElementById("diffbutton").innerHTML =   `<button type="button" onclick="toUpdate()">
+                                                                        <img src="images/save_button.svg">
+                                                                    </button>
+                                                                    <a href="/ProductManagement">
+                                                                        <button type="button">
+                                                                            <img src="images/Cancel_button.svg">
+                                                                        </button>
+                                                                    </a>`
+            } else {
+                let check = document.getElementById("statuscheck");
+                let sta = document.createElement("span");
+                sta.classList.add("availablestatus");
+                sta.innerText = "Available";
+                check.append(sta);
+                document.getElementById("hiddenifadd").innerHTML = "";
+                document.getElementById("diffbutton").innerHTML =   `<button onclick="toAdd()">
+                                                                            <img src="images/Add_button.svg">
+                                                                    </button>
+                                                                    <a href="/ProductManagement">
+                                                                        <button type="reset" class="cancelbutton">
+                                                                            <img src="images/Cancel_button.svg">
+                                                                        </button>
+                                                                    </a>`
+            }
+        };
+
+        toShowAll()
+        
+        function toInput() {
+            let inputlink = prompt('Enter Link Here');
+            if (inputlink) {
+                document.getElementById('imageproduct').innerHTML = `<img id="imageproductedit" src="${inputlink}">`;
+                document.getElementById('img').value = inputlink;
+
+            } else {
+                document.getElementById('imageproduct').innerHTML = document.getElementById('imageproduct').innerHTML
+            }
+        }
+
+        function toUnAvailable() {
+            let check = document.getElementById("statuscheck");
+            let sta = document.createElement("span");
+            if (check.innerText === "Unavailable") {
+                sta.classList.add("availablestatus");
+                sta.innerText = "Available";
+                check.innerHTML = "";
+                check.append(sta);
+            } else if (check.innerText === "Available") {
+                sta.classList.add("unavailablestatus");
+                sta.innerText = "Unavailable";
+                check.innerHTML = "";
+                check.append(sta);
+            }
+        }
+
+        function toAddTag() {
+            let input = document.getElementById("tag").value;
+            let taglist = Array.from(document.getElementById("tag").value.split(",").map(x => x.trim()));
+            for (let i = 0; i < taglist.length; i++) {
+                let tag = document.getElementById("ptag");
+                let tagblock = document.createElement("div");
+                tagblock.classList.add("tagblock");
+                tagblock.setAttribute("onclick", "manageTag(this)");
+                tagblock.innerHTML = taglist[i];
+                tag.append(tagblock);
+            }
+            document.getElementById("tag").value = "";
+        }
+
+        function manageTag(ele) {
+            document.getElementById("tag").value = ele.innerText;
+            ele.remove();
+        }
+
+        async function toDeleteImage()  {
+            let img = document.getElementById('imageproduct');
+            if (url.searchParams.get("pid")) {
+                var pid = url.searchParams.get("pid");
+                let response = await fetch(`http://localhost:3031/api/products/${pid}`, { method: 'GET' });
+                let data = await response.json();
+                img.innerHTML = `<img id="imageproductedit" src="${data.data[0].Picture}">`
+                console.log(data.data[0].PName)
+            } else {
+                img.innerHTML = `<button type="button" onclick="toInput()">
+                                    <img class="imgup" src="images/Upload_image button.svg">
+                                </button>`
+            }
+        }
+
+        async function toDelete() {
+            var delete_target = url.searchParams.get("pid");
+            fetch("http://localhost:3031/api/product",
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Private-Network': 'true'
+                },
+                method: "DELETE",
+                body: JSON.stringify({
+                    "Product": {
+                        "ProductID": delete_target,
+                    }
+                })
+            })
+            .then(
+                function(res){ console.log(`${delete_target} Delete Success`) }
+            )
+            .catch(function(res){ console.log(res) })
+            alert('Delete ' + delete_target + ' successfully');
+            window.location.href = '/ProductManagement';
+        }
+
+        async function toAdd() {
+            event.preventDefault();
+            let Picture = document.getElementById("img").value;
+            let PName = document.getElementById("pname").value;
+            let PID = document.getElementById("pid").value;
+            let Price = parseInt(document.getElementById("pprice").value);
+            let Description = document.getElementById("pdesc").value;
+            let Category = document.getElementById("showcategory").value;
+            let PreStatus = document.getElementById("statuscheck").innerText;
+            Status = Boolean(PreStatus === 'Available');
+            let taglist = Array.from(document.querySelectorAll(".tagblock")).map(x => x.innerText).join(", ");
+            if (Picture && PName && PID && Price && Description && Category && PreStatus && taglist) {
+                await fetch('http://localhost:3031/api/product', { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "Product": {
+                            "ProductID": PID,
+                            "PName": PName,
+                            "Price": Price,
+                            "Description": Description,
+                            "Picture": Picture,
+                            "Status": Status,
+                            "CategoryCode": Category
+                        }
+                    }) 
+                })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error(error));
+                await fetch("http://localhost:3031/api/tag", {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: "POST",
+                    body: JSON.stringify({
+                        "Tags": {
+                            "ProductID": PID,
+                            "Tag": taglist
+                        }
+                    })
+                })
+                .then(
+                    function(res){ console.log(res) }
+                )
+                .catch(function(res){ console.log(res)})
+                alert('ADD ' + PID + ' successfully');
+                window.location.href = 'http://localhost:3030/ProductManagement';   
+            } else {
+                alert('Please fill up the information');
+            }
+        }
+
+        async function toUpdate() {
+            let Picture = document.getElementById("img").value;
+            let PName = document.getElementById("pname").value;
+            let PID = url.searchParams.get("pid");
+            let Price = parseInt(document.getElementById("pprice").value);
+            let Description = document.getElementById("pdesc").value;
+            let Category = document.getElementById("showcategory").value;
+            let PreStatus = document.getElementById("statuscheck").innerText;
+            Status = Boolean(PreStatus === 'Available');
+            await fetch('http://localhost:3031/api/product', { 
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "Product": {
+                        "ProductID": PID,
+                        "PName": PName,
+                        "Price": Price,
+                        "Description": Description,
+                        "Picture": Picture,
+                        "Status": Status,
+                        "CategoryCode": Category
+                    }
+                }) 
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error(error));
+
+            let taglist = Array.from(document.querySelectorAll(".tagblock")).map(x => x.innerText).join(", ");
+            
+            await fetch("http://localhost:3031/api/tag",{
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: "PUT",
+                body: JSON.stringify({
+                    "Tags": {
+                        "ProductID": PID,
+                        "Tag": taglist
+                    }
+                })
+            })
+            .then(
+                function(res){ console.log(res) }
+            )
+            .catch(function(res){ console.log(res) })
+            window.location.href = 'http://localhost:3030/ProductManagement';
+            alert('Update ' + PID + ' successfully');
+        }
+
+    </script>
+</body>
+
+</html>
